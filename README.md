@@ -7,6 +7,13 @@
 
 ---
 
+## Objective
+
+Analyze how market sentiment (Fear vs Greed) impacts trader behavior and performance, and derive data-driven trading strategies.
+
+
+---
+
 ## Project Structure
 
 ```
@@ -15,7 +22,7 @@ primetrade-assignment/
 │   ├── fear_greed_index.csv      # 2,644 rows — daily sentiment
 │   └── trader_data.csv           # 211,224 rows — Hyperliquid trades
 ├── notebooks/
-│   └── analysis.ipynb            # Section A And B is cover in this Complete analysis notebook
+│   └── analysis_chart.ipynb            # Section A And B is cover in this Complete analysis notebook
     |__ model.ipynb               # additional effort Build a Tree based ML Model with 84% accuracy
     |__ Insights_and_Strategy_Recommendations.txt    # This file Contain section C of the assignment
 ├── outputs/               # All 5 charts  + 2 model based chart (PNG)
@@ -41,9 +48,11 @@ jupyter notebook notebooks/analysis_chart.ipynb
 
 ### Data Preparation
 
-- Loaded Fear/Greed Index (2,644 rows) and Hyperliquid Trader Data (211,224 rows)
-- Parsed `Timestamp IST` to daily dates; merged both datasets on `date`
-- Engineered features: daily PnL, win rate, trade frequency, long/short ratio, position size
+- Converted timestamps to daily level and aligned both datasets
+- Aggregated trader data per account per day
+- Engineered key features: PnL, win rate, trade frequency, position size, long/short ratio
+- Compared performance across sentiment buckets
+- Built a predictive model to validate patterns
 
 ### Analysis
 
@@ -54,13 +63,21 @@ jupyter notebook notebooks/analysis_chart.ipynb
 
 ---
 
-## Key Insights
+## Insights and Impact
 
-| #   | Insight                                                                            | Evidence |
-| --- | ---------------------------------------------------------------------------------- | -------- |
-| 1   | **Fear days are most profitable** — Extreme Fear: avg $500 PnL vs Greed: -$86      | Chart 1  |
-| 2   | **Greed inflates position size but kills returns** — $7,807 avg size on Greed days | Chart 2  |
-| 3   | **Traders trade more frequently on Fear days** — 4.52 vs 3.87 trades/day           | Chart 2  |
+| # | Insight                                  | Impact                                          |
+| - | ---------------------------------------- | ----------------------------------------------- |
+| 1 | Fear days are most profitable            | Panic creates mispricing → better opportunities |
+| 2 | Greed increases size but reduces returns | Overconfidence → higher risk, lower returns     |
+| 3 | Higher activity during Fear              | Volatility creates more trading opportunities   |
+
+
+
+## Business Impact
+
+Traders should increase activity during fear phases to capture opportunities
+During greed phases, risk management becomes critical due to overconfidence
+Market sentiment can be used as a decision-support signal, not just an indicator
 
 ---
 
@@ -73,6 +90,8 @@ When index < 30: increase frequency +20%, allow long exposure up to 60%, keep si
 When index > 60: cap position size at 50%, reduce leverage, prefer flat/short positions.
 
 ---
+
+
 
 ## Bonus: Predictive Model
 
