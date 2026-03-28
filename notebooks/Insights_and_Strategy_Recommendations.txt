@@ -1,0 +1,38 @@
+
+INSIGHT 1 — Fear Days Are the Most Profitable
+
+Extreme Fear days show the highest average PnL (+$500).
+Greed days are the only sentiment with negative average PnL (-$86).
+This is counterintuitive but consistent: when the market panics,
+skilled traders capture mispricing and close positions profitably.
+
+INSIGHT 2 — Greed Makes Traders Oversize Their Positions
+
+On Greed days, average position size reaches $7,807 — the highest.
+Yet PnL on those same days is the only negative bucket.
+Traders are overconfident during bull sentiment and take on too much risk.
+This is a classic behavioral bias: overconfidence inflates size, kills returns.
+
+INSIGHT 3 — Traders Are More Active and More Bullish During Fear
+
+Fear days average 4.52 trades per day vs 3.87 on Greed days.
+Long ratio is also higher during Fear (41.6%) than Greed (37.6%).
+This suggests traders are contrarian: they buy dips during fear
+and become cautious or go short when everyone else is euphoric.
+
+STRATEGY 1 — The Fear Accumulation Rule
+
+When the Fear/Greed index is below 30 (Fear zone):
+  - Increase trade frequency by up to 20%
+  - Allow long exposure up to 60% of portfolio
+  - Keep average position size below $5,000
+Reason: this matches the behavior of the most profitable days.
+
+STRATEGY 2 — The Greed Brake Rule
+
+When the Fear/Greed index is above 60 (Greed zone):
+  - Cap position size at 50% of your normal maximum
+  - Reduce leverage, especially for large position traders
+  - Prefer flat or short-biased positions
+Reason: large positions on greed days are the biggest source of losses.
+""")
