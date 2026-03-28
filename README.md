@@ -2,7 +2,7 @@
 
 ### Primetrade.ai — Data Science Internship Assignment
 
-**Author:** Ayan Mansuri  
+**Author:** Ayan Mansoori  
 **Dataset:** Hyperliquid Trader Data + Bitcoin Fear/Greed Index
 
 ---
