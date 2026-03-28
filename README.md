@@ -75,9 +75,9 @@ jupyter notebook notebooks/analysis_chart.ipynb
 
 ## Business Impact
 
-Traders should increase activity during fear phases to capture opportunities
-During greed phases, risk management becomes critical due to overconfidence
-Market sentiment can be used as a decision-support signal, not just an indicator
+1. Traders should increase activity during fear phases to capture opportunities.
+2. During greed phases, risk management becomes critical due to overconfidence.
+3. Market sentiment can be used as a decision-support signal, not just an indicator.
 
 ---
 
