@@ -1,0 +1,6 @@
+__pycache__/
+*.py[cod]
+artifacts/
+logs/
+.pytest_cache/
+.ipynb_checkpoints/

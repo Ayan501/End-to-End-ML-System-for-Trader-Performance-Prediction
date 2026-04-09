@@ -1,82 +1,153 @@
-# Trader Performance vs Market Sentiment
+# PrimeTrade End-to-End ML Project
 
-### Primetrade.ai — Data Science Internship Assignment
+Production-style machine learning project built on the PrimeTrade assignment dataset.
+It converts the original notebook workflow into a reusable Python package with modular pipelines.
 
-**Author:** Ayan Mansuri  
-**Dataset:** Hyperliquid Trader Data + Bitcoin Fear/Greed Index
+## Highlights
 
----
+- `setup.py` based packaging
+- custom logging and exception handling
+- data ingestion, transformation, training, and prediction pipelines
+- multiple ML model comparison
+- persisted artifacts for preprocessing, metrics, and best model
 
 ## Project Structure
 
-```
+```text
 primetrade-assignment/
-├── data/
-│   ├── fear_greed_index.csv      # 2,644 rows — daily sentiment
-│   └── trader_data.csv           # 211,224 rows — Hyperliquid trades
-├── notebooks/
-│   └── analysis.ipynb            # Section A And B is cover in this Complete analysis notebook
-    |__ model.ipynb               # additional effort Build a Tree based ML Model with 84% accuracy
-    |__ Insights_and_Strategy_Recommendations.txt    # This file Contain section C of the assignment
-├── outputs/               # All 5 charts  + 2 model based chart (PNG)
-├── README.md
-└── requirements.txt
+|-- data/
+|-- notebooks/
+|-- outputs/
+|-- artifacts/
+|-- logs/
+|-- src/
+|   |-- components/
+|   |-- constants/
+|   |-- entity/
+|   |-- pipeline/
+|   |-- exception.py
+|   |-- logger.py
+|   |-- utils.py
+|-- main.py
+|-- predict.py
+|-- setup.py
+|-- requirements.txt
 ```
 
----
+## Problem Statement
 
-## Setup & RunS
+Hyperliquid trade history and Bitcoin Fear/Greed sentiment ko use karke next-day trader PnL bucket predict karna:
+
+- `big_loss`
+- `small_loss`
+- `small_win`
+- `big_win`
+
+## Pipeline Flow
+
+### Data ingestion
+
+- reads `data/historical_data.csv`
+- reads `data/fear_greed_index.csv`
+- builds account-date level feature store
+- saves processed data to `artifacts/feature_store/trader_features.csv`
+
+### Feature engineering
+
+Main features:
+
+- `trade_count`
+- `total_pnl`
+- `avg_size_usd`
+- `total_fee`
+- `avg_execution_price`
+- `buy_ratio`
+- `long_ratio`
+- `unique_assets`
+- `win_rate`
+- `fg_value`
+- `net_pnl_after_fee`
+- `pnl_per_trade`
+- `size_to_fee_ratio`
+- `sentiment`
+
+### Model training
+
+Compared models:
+
+- `LogisticRegression`
+- `RandomForestClassifier`
+- `GradientBoostingClassifier`
+- `ExtraTreesClassifier`
+
+Best model, preprocessor, and metrics are saved automatically.
+
+## Installation
+
 ```bash
-# 1. Clone / download the repo
-# 2. Install dependencies
 pip install -r requirements.txt
-
-# 3. Open notebook
-jupyter notebook notebooks/analysis_chart.ipynb
+pip install -e .
 ```
 
----
+## Run Training
 
-## Methodology
+```bash
+python main.py
+```
 
-### Data Preparation
+Generated artifacts:
 
-- Loaded Fear/Greed Index (2,644 rows) and Hyperliquid Trader Data (211,224 rows)
-- Parsed `Timestamp IST` to daily dates; merged both datasets on `date`
-- Engineered features: daily PnL, win rate, trade frequency, long/short ratio, position size
+- `artifacts/feature_store/trader_features.csv`
+- `artifacts/transformation/preprocessor.pkl`
+- `artifacts/transformation/train.pkl`
+- `artifacts/transformation/test.pkl`
+- `artifacts/model_trainer/model.pkl`
+- `artifacts/model_trainer/metrics.json`
 
-### Analysis
+## Run Prediction
 
-- Grouped by sentiment category (Extreme Fear → Extreme Greed)
-- Computed performance metrics per sentiment bucket
-- Segmented traders into: Winners/Losers, High/Low Frequency, Small/Mid/Large Position size
-- Built Random Forest classifier (84.36% accuracy) to predict PnL bucket
+```powershell
+python predict.py `
+  --trade-count 12 `
+  --total-pnl 450 `
+  --avg-size-usd 1800 `
+  --total-fee 23 `
+  --avg-execution-price 102000 `
+  --buy-ratio 0.66 `
+  --long-ratio 0.58 `
+  --unique-assets 4 `
+  --win-rate 0.62 `
+  --fg-value 35 `
+  --net-pnl-after-fee 427 `
+  --pnl-per-trade 37.5 `
+  --size-to-fee-ratio 75 `
+  --sentiment Fear
+```
 
----
+## Run Dashboard
 
-## Key Insights
+Backend API:
 
-| #   | Insight                                                                            | Evidence |
-| --- | ---------------------------------------------------------------------------------- | -------- |
-| 1   | **Fear days are most profitable** — Extreme Fear: avg $500 PnL vs Greed: -$86      | Chart 1  |
-| 2   | **Greed inflates position size but kills returns** — $7,807 avg size on Greed days | Chart 2  |
-| 3   | **Traders trade more frequently on Fear days** — 4.52 vs 3.87 trades/day           | Chart 2  |
+```bash
+python app.py
+```
 
----
+Frontend:
 
-## Strategy Recommendations
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
-**Strategy 1 — Fear Accumulation Rule**  
-When index < 30: increase frequency +20%, allow long exposure up to 60%, keep sizes moderate.
+This React UI is styled around the reference analytics dashboard look and includes a live prediction section connected to the ML model API.
 
-**Strategy 2 — Greed Brake Rule**  
-When index > 60: cap position size at 50%, reduce leverage, prefer flat/short positions.
+## Current Local Result
 
----
+Latest local run selected `RandomForestClassifier` with `0.4481` test accuracy for next-day PnL bucket prediction.
 
-## Bonus: Predictive Model
+## Notes
 
-- **Algorithm:** Random Forest Classifier
-- **Target:** Next-day PnL bucket (Big Loss / Small Loss / Small Win / Big Win)
-- **Features:** fg_value, sentiment, trade_count, avg_size, long_ratio, win_rate
-- **Accuracy: 84.36%**
+- notebooks are preserved for EDA and analysis
+- logs are generated in `logs/`
+- custom exception flow is implemented across pipeline stages
