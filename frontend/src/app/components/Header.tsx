@@ -1,15 +1,22 @@
-export function Header() {
+interface HeaderProps {
+  eyebrow?: string;
+  title?: string;
+  subtitle?: string;
+}
+
+export function Header({
+  eyebrow = 'PrimeTrade ML Dashboard',
+  title = 'Analytics Control Room',
+  subtitle = 'Advanced ML prediction system mapping Fear & Greed sentiment with trader behavior patterns. Real-time analysis and next-day PnL bucket prediction powered by ensemble models.',
+}: HeaderProps) {
   return (
     <header className="dashboard-header">
-      <span className="header-eyebrow">PrimeTrade ML Dashboard</span>
+      <span className="header-eyebrow">{eyebrow}</span>
       
       <div className="header-top">
         <div>
-          <h1 className="header-title">Analytics Control Room</h1>
-          <p className="header-subtitle">
-            Advanced ML prediction system mapping Fear & Greed sentiment with trader behavior patterns. 
-            Real-time analysis and next-day PnL bucket prediction powered by ensemble models.
-          </p>
+          <h1 className="header-title">{title}</h1>
+          <p className="header-subtitle">{subtitle}</p>
         </div>
         
         <div className="header-profile">

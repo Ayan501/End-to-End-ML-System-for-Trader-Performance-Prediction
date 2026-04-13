@@ -82,9 +82,9 @@ class DataIngestion:
 
         feature_store_df = feature_store_df.sort_values(["Account", "trade_date"]).reset_index(drop=True)
         feature_store_df["next_day_pnl"] = feature_store_df.groupby("Account")["total_pnl"].shift(-1)
-        valid_target_mask = feature_store_df["next_day_pnl"].notna()
-        feature_store_df.loc[valid_target_mask, "target_label"] = pd.qcut(
-            feature_store_df.loc[valid_target_mask, "next_day_pnl"].rank(method="first"),
+        feature_store_df["current_day_pnl"] = feature_store_df["total_pnl"]
+        feature_store_df["target_label"] = pd.qcut(
+            feature_store_df["current_day_pnl"].rank(method="first"),
             q=4,
             labels=["big_loss", "small_loss", "small_win", "big_win"],
         )

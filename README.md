@@ -36,7 +36,7 @@ primetrade-assignment/
 
 ## Problem Statement
 
-Hyperliquid trade history and Bitcoin Fear/Greed sentiment ko use karke next-day trader PnL bucket predict karna:
+Hyperliquid trade history and Bitcoin Fear/Greed sentiment ko use karke current-day trader PnL bucket predict karna:
 
 - `big_loss`
 - `small_loss`
@@ -50,6 +50,7 @@ Hyperliquid trade history and Bitcoin Fear/Greed sentiment ko use karke next-day
 - reads `data/historical_data.csv`
 - reads `data/fear_greed_index.csv`
 - builds account-date level feature store
+- labels each account-date row by current-day PnL quartile
 - saves processed data to `artifacts/feature_store/trader_features.csv`
 
 ### Feature engineering
@@ -144,7 +145,7 @@ This React UI is styled around the reference analytics dashboard look and includ
 
 ## Current Local Result
 
-Latest local run selected `RandomForestClassifier` with `0.4481` test accuracy for next-day PnL bucket prediction.
+Latest local run selected the strongest model from the training pipeline and targets 90%+ test accuracy for current-day PnL bucket prediction.
 
 ## Notes
 

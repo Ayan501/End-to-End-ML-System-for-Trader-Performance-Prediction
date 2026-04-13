@@ -65,7 +65,13 @@ class DataTransformation:
             df = pd.read_csv(data_ingestion_artifact.feature_store_path)
             df = df.dropna(subset=[self.config.target_column]).copy()
 
-            drop_columns = ["Account", "trade_date", "next_day_pnl", self.config.target_column]
+            drop_columns = [
+                "Account",
+                "trade_date",
+                "next_day_pnl",
+                "current_day_pnl",
+                self.config.target_column,
+            ]
             input_feature_df = df.drop(columns=drop_columns)
             target_series = df[self.config.target_column]
 

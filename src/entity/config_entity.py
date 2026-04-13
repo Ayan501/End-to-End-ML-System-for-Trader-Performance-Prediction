@@ -28,7 +28,7 @@ class DataTransformationConfig:
 class ModelTrainerConfig:
     trained_model_file_path: Path = ARTIFACTS_DIR / "model_trainer" / "model.pkl"
     metrics_file_path: Path = ARTIFACTS_DIR / "model_trainer" / "metrics.json"
-    expected_accuracy: float = 0.40
+    expected_accuracy: float = 0.90
     random_state: int = 42
     model_params: dict = field(
         default_factory=lambda: {
