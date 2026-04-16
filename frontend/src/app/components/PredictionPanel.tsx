@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Zap } from 'lucide-react';
 
 interface PredictionFormData {
@@ -19,11 +19,18 @@ interface PredictionFormData {
 }
 
 interface PredictionPanelProps {
-  onPredict?: (data: PredictionFormData) => Promise<string>;
+  onPredict?: (data: PredictionFormData) => Promise<string | PredictionResponse>;
+  initialData?: Partial<PredictionFormData>;
 }
 
-export function PredictionPanel({ onPredict }: PredictionPanelProps) {
-  const [formData, setFormData] = useState<PredictionFormData>({
+interface PredictionResponse {
+  prediction: string;
+  model_name?: string;
+  accuracy?: number;
+  model_updated_at?: string;
+}
+
+const emptyPredictionForm: PredictionFormData = {
     trade_count: '',
     total_pnl: '',
     avg_size_usd: '',
@@ -38,10 +45,25 @@ export function PredictionPanel({ onPredict }: PredictionPanelProps) {
     pnl_per_trade: '',
     size_to_fee_ratio: '',
     sentiment: 'Neutral',
-  });
+};
 
-  const [prediction, setPrediction] = useState<string | null>(null);
+export function PredictionPanel({ onPredict, initialData }: PredictionPanelProps) {
+  const [formData, setFormData] = useState<PredictionFormData>(emptyPredictionForm);
+
+  const [prediction, setPrediction] = useState<PredictionResponse | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (!initialData) return;
+
+    setFormData({
+      ...emptyPredictionForm,
+      ...Object.fromEntries(
+        Object.entries(initialData).map(([key, value]) => [key, String(value ?? '')]),
+      ),
+      sentiment: String(initialData.sentiment || 'Neutral'),
+    });
+  }, [initialData]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({
@@ -58,17 +80,17 @@ export function PredictionPanel({ onPredict }: PredictionPanelProps) {
       // Simulate API call or use provided handler
       if (onPredict) {
         const result = await onPredict(formData);
-        setPrediction(result);
+        setPrediction(typeof result === 'string' ? { prediction: result } : result);
       } else {
         // Mock prediction logic
         await new Promise(resolve => setTimeout(resolve, 1000));
         const outcomes = ['big_win', 'small_win', 'small_loss', 'big_loss'];
         const randomOutcome = outcomes[Math.floor(Math.random() * outcomes.length)];
-        setPrediction(randomOutcome);
+        setPrediction({ prediction: randomOutcome });
       }
     } catch (error) {
       console.error('Prediction error:', error);
-      setPrediction('error');
+      setPrediction({ prediction: 'error' });
     } finally {
       setIsLoading(false);
     }
@@ -102,7 +124,7 @@ export function PredictionPanel({ onPredict }: PredictionPanelProps) {
               type="number"
               name="trade_count"
               className="form-input"
-              placeholder="e.g., 150"
+              placeholder="0"
               value={formData.trade_count}
               onChange={handleChange}
               required
@@ -115,7 +137,7 @@ export function PredictionPanel({ onPredict }: PredictionPanelProps) {
               type="number"
               name="total_pnl"
               className="form-input"
-              placeholder="e.g., 5000"
+              placeholder="0"
               value={formData.total_pnl}
               onChange={handleChange}
               required
@@ -128,7 +150,7 @@ export function PredictionPanel({ onPredict }: PredictionPanelProps) {
               type="number"
               name="avg_size_usd"
               className="form-input"
-              placeholder="e.g., 1200"
+              placeholder="0"
               value={formData.avg_size_usd}
               onChange={handleChange}
               required
@@ -141,7 +163,7 @@ export function PredictionPanel({ onPredict }: PredictionPanelProps) {
               type="number"
               name="total_fee"
               className="form-input"
-              placeholder="e.g., 45"
+              placeholder="0"
               value={formData.total_fee}
               onChange={handleChange}
               required
@@ -154,7 +176,7 @@ export function PredictionPanel({ onPredict }: PredictionPanelProps) {
               type="number"
               name="avg_execution_price"
               className="form-input"
-              placeholder="e.g., 0.00123"
+              placeholder="0"
               step="any"
               value={formData.avg_execution_price}
               onChange={handleChange}
@@ -168,7 +190,7 @@ export function PredictionPanel({ onPredict }: PredictionPanelProps) {
               type="number"
               name="buy_ratio"
               className="form-input"
-              placeholder="e.g., 0.65"
+              placeholder="0"
               step="0.01"
               min="0"
               max="1"
@@ -184,7 +206,7 @@ export function PredictionPanel({ onPredict }: PredictionPanelProps) {
               type="number"
               name="long_ratio"
               className="form-input"
-              placeholder="e.g., 0.70"
+              placeholder="0"
               step="0.01"
               min="0"
               max="1"
@@ -200,7 +222,7 @@ export function PredictionPanel({ onPredict }: PredictionPanelProps) {
               type="number"
               name="unique_assets"
               className="form-input"
-              placeholder="e.g., 8"
+              placeholder="0"
               value={formData.unique_assets}
               onChange={handleChange}
               required
@@ -213,7 +235,7 @@ export function PredictionPanel({ onPredict }: PredictionPanelProps) {
               type="number"
               name="win_rate"
               className="form-input"
-              placeholder="e.g., 0.58"
+              placeholder="0"
               step="0.01"
               min="0"
               max="1"
@@ -229,7 +251,7 @@ export function PredictionPanel({ onPredict }: PredictionPanelProps) {
               type="number"
               name="fg_value"
               className="form-input"
-              placeholder="e.g., 45"
+              placeholder="0"
               value={formData.fg_value}
               onChange={handleChange}
               required
@@ -242,7 +264,7 @@ export function PredictionPanel({ onPredict }: PredictionPanelProps) {
               type="number"
               name="net_pnl_after_fee"
               className="form-input"
-              placeholder="e.g., 4955"
+              placeholder="0"
               value={formData.net_pnl_after_fee}
               onChange={handleChange}
               required
@@ -255,7 +277,7 @@ export function PredictionPanel({ onPredict }: PredictionPanelProps) {
               type="number"
               name="pnl_per_trade"
               className="form-input"
-              placeholder="e.g., 33.03"
+              placeholder="0"
               step="any"
               value={formData.pnl_per_trade}
               onChange={handleChange}
@@ -269,7 +291,7 @@ export function PredictionPanel({ onPredict }: PredictionPanelProps) {
               type="number"
               name="size_to_fee_ratio"
               className="form-input"
-              placeholder="e.g., 26.67"
+              placeholder="0"
               step="any"
               value={formData.size_to_fee_ratio}
               onChange={handleChange}
@@ -306,9 +328,14 @@ export function PredictionPanel({ onPredict }: PredictionPanelProps) {
         {prediction && (
           <div className="prediction-result">
             <div className="result-label">Predicted Next-Day PnL Bucket</div>
-            <div className={`result-value ${prediction}`}>
-              {getResultLabel(prediction)}
+            <div className={`result-value ${prediction.prediction}`}>
+              {getResultLabel(prediction.prediction)}
             </div>
+            {prediction.model_name && (
+              <div className="result-meta">
+                Used {prediction.model_name} at {prediction.accuracy}% accuracy
+              </div>
+            )}
           </div>
         )}
       </div>

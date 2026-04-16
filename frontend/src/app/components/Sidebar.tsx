@@ -1,6 +1,6 @@
-import { LayoutDashboard, Home, FileText, Network, TrendingUp, Settings, Zap, Users } from 'lucide-react';
+import { LayoutDashboard, Home, FileText, Network, TrendingUp, Settings, Zap, Users, UploadCloud } from 'lucide-react';
 
-export type PageName = 'Home' | 'Dashboard' | 'Reports' | 'Traders' | 'Models' | 'Prediction' | 'Settings';
+export type PageName = 'Home' | 'Dashboard' | 'Reports' | 'Traders' | 'Models' | 'Prediction' | 'Upload' | 'Settings';
 
 interface SidebarProps {
   activeItem?: PageName;
@@ -15,6 +15,7 @@ export function Sidebar({ activeItem = 'Dashboard', onNavigate }: SidebarProps) 
     { name: 'Traders', icon: Users },
     { name: 'Models', icon: Network },
     { name: 'Prediction', icon: TrendingUp },
+    { name: 'Upload', icon: UploadCloud },
     { name: 'Settings', icon: Settings },
   ] satisfies Array<{ name: PageName; icon: typeof Home }>;
 
